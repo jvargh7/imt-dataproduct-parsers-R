@@ -23,7 +23,7 @@ error_logs_extract <- map_dfr(error_logs_list,
 unique_ids <- error_logs_extract$folder_id %>% unique(.)
 patient_information <- read_csv(paste0(path_fusion_data,"/patient_information.csv")) %>% 
   dplyr::select(subject_id,folder_id,insulin,dextrose,weight) %>% 
-  pivot_longer(cols=c("insulin","dextrose"),names_to="substance",values_to="dosage") %>% 
+  pivot_longer(cols=c("insulin","dextrose"),names_to="substance",values_to="concentration") %>% 
   mutate(substance = str_to_sentence(substance))
   
 
@@ -32,11 +32,11 @@ glucose_parsed <- glucose_parsing(error_logs_extract) %>%
   left_join(patient_information %>% distinct(folder_id,subject_id),by=c("folder_id"))
 pump_rate_parsed <- pump_rate_parsing(error_logs_extract) %>% 
   left_join(patient_information,by=c("substance","folder_id")) %>% 
-  mutate(rate1 = case_when(substance == "Insulin" ~ rate*dosage,
-                                 substance == "Dextrose" ~ rate*dosage*(1/6),
+  mutate(rate1 = case_when(substance == "Insulin" ~ rate*concentration,
+                                 substance == "Dextrose" ~ (rate/100)*(concentration*1000)*(1/60),
                                  TRUE ~ NA_real_),
          rate1_per_kg = rate1/weight) %>% 
-  dplyr::select(-weight,-dosage)
+  dplyr::select(-weight,-concentration)
 
 
 

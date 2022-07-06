@@ -15,7 +15,8 @@ data_logs_extract <- map(data_logs_list,
       print(folder_id);
       
       df1 <- read_csv(f,col_names = header1,n_max = 1,skip = 1) %>% 
-        mutate(folder_id = folder_id)
+        mutate(folder_id = folder_id,
+               subject_id = paste0("'",subject_id,"'"))
       df2 <- read_csv(f,col_names = header2,skip = 3)  %>% 
         mutate(folder_id = folder_id)
       

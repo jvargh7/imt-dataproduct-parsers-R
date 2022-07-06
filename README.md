@@ -1,2 +1,1 @@
-# imt-dataproduct-parsers-R
-IMT Dataproduct Parsers
+# IMT Dataproduct Parsers

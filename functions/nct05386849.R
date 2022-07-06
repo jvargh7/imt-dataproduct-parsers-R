@@ -25,7 +25,7 @@ nct05386849 <- function(dexcom_glucose,fusion_glucose = NULL,arterial_glucose = 
     s1 <- mean(dexcom_glucose < 54,na.rm=TRUE)*100
     s2 <- mean(dexcom_glucose > 180,na.rm=TRUE)*100
     s3 <- sd(dexcom_glucose,na.rm=TRUE)/mean(dexcom_glucose,na.rm=TRUE)
-    s4 <- mean(dexcom_glucose %in% c(100:140),na.rm=TRUE)
+    s4 <- mean(dexcom_glucose %in% c(100:140),na.rm=TRUE)*100
   }
   
   data.frame(lt70 = p1,

@@ -11,9 +11,13 @@ data_logs_extract <- map(data_logs_list,
     function(f){
       f_name <- str_extract(f,"IMT_[a-z0-9_]+");
       f_id <- str_replace(f_name,"IMT_data_log_","");
+      folder_id <- str_extract(string = f,pattern = "extract/[0-9_]+") %>% str_replace(.,"extract/",replacement = "");
+      print(folder_id);
       
-      df1 <- read_csv(f,col_names = header1,n_max = 1,skip = 1)
-      df2 <- read_csv(f,col_names = header2,skip = 3)
+      df1 <- read_csv(f,col_names = header1,n_max = 1,skip = 1) %>% 
+        mutate(folder_id = folder_id)
+      df2 <- read_csv(f,col_names = header2,skip = 3)  %>% 
+        mutate(folder_id = folder_id)
       
       list(df1,df2) %>% 
         return()

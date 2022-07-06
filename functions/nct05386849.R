@@ -20,12 +20,12 @@ nct05386849 <- function(dexcom_glucose,fusion_glucose = NULL,arterial_glucose = 
   p1 <- p2 <- s1 <- s2 <- s3 <- s4 <- NA
   if(missing < 0.70*length(dexcom_glucose)){
     p1 <- mean(dexcom_glucose < 70,na.rm=TRUE)*100
-    p2 <- mean(dexcom_glucose %in% c(70:180))*100
+    p2 <- mean(dexcom_glucose %in% c(70:180),na.rm=TRUE)*100
     
-    s1 <- mean(dexcom_glucose < 54)*100
-    s2 <- mean(dexcom_glucose > 180)*100
-    s3 <- sd(dexcom_glucose)/mean(dexcom_glucose)
-    s4 <- mean(dexcom_glucose %in% c(100:140))
+    s1 <- mean(dexcom_glucose < 54,na.rm=TRUE)*100
+    s2 <- mean(dexcom_glucose > 180,na.rm=TRUE)*100
+    s3 <- sd(dexcom_glucose,na.rm=TRUE)/mean(dexcom_glucose,na.rm=TRUE)
+    s4 <- mean(dexcom_glucose %in% c(100:140),na.rm=TRUE)
   }
   
   data.frame(lt70 = p1,

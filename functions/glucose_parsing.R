@@ -1,7 +1,7 @@
 glucose_parsing <- function(df) {
   df_parsed <- df %>% 
     dplyr::filter(log_level == "LOG_INFO",str_detect(error_message,"Sensor Data")) %>% 
-    dplyr::select(folder_id,log_timestamp,error_message) %>% 
+    dplyr::select(error_session,log_timestamp,error_message) %>% 
     mutate(error_message = str_replace_all(error_message,"(Sensor Data\\:\\s|\\t|\\n|\\\\n|\\\\t|\\\\|\\{|\\}|Raw Packet\\:)","") %>% 
              str_trim(.) %>% 
              str_squish(.)) %>% 

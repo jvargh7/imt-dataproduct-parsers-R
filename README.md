@@ -6,8 +6,8 @@ This is the output from analysis/ida01_controller summary.R and functions/nct053
 
 | Variable      | Description |
 | ----------- | ----------- |
-| folder_id      | Name of zip file       |
 | subject_id   | Subject ID from Row 2 of Data Log    |
+| data_session      | Time of session as per Data Logs |
 |  lt70  | Percentage of glucose values < 70 mg/dL  |
 |  range70to180  | Percentage of glucose values 70-180 mg/dL  |
 |  lt54  | Percentage of glucose values < 54 mg/dL  |
@@ -23,8 +23,8 @@ This is the output from analysis/ida02_sensor summary.R, consisting of primary a
 
 | Variable      | Description |
 | ----------- | ----------- |
-| folder_id      | Name of zip file       |
 | subject_id   | Subject ID from Row 2 of Data Log    |
+| data_session      | Time of session as per Data Logs |
 | sensor_id   | Sensor ID (0 or 1)   |
 |  lt70  | Percentage of glucose values < 70 mg/dL  |
 |  range70to180  | Percentage of glucose values 70-180 mg/dL  |
@@ -38,8 +38,8 @@ This is the output from analysis/ida02_sensor summary.R, consisting of infusion 
 
 | Variable      | Description |
 | ----------- | ----------- |
-| folder_id      | Name of zip file       |
 | subject_id   | Subject ID from Row 2 of Data Log    |
+| data_session      | Time of session as per Data Logs |
 | substance   | Substance (Dextrose or Insulin)   |
 | average_rate1   | Rate (Insulin: U/hr or Dextrose: mg/min)   |
 | average_rate1_per_kg   | Rate (Insulin: U/kg.hr or Dextrose: mg/kg.min)   |

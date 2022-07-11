@@ -2,7 +2,7 @@ pump_rate_parsing <- function(df) {
   
   df_parsed <- df %>% 
     dplyr::filter(log_level == "LOG_DEBUG",str_detect(error_message,"changing pump rate to")) %>% 
-    dplyr::select(folder_id,log_timestamp,error_message) %>% 
+    dplyr::select(error_session,log_timestamp,error_message) %>% 
     mutate(rate = str_extract(error_message,"[0-9\\.]+") %>% as.numeric(.),
            substance = case_when(str_detect(error_message,"Dextrose") ~ "Dextrose",
                                  str_detect(error_message,"Insulin") ~ "Insulin",

@@ -5,20 +5,44 @@ header2 <- c("controller_time","system_time","glucose",
                     rep(c(25,50,75),times=4),"th"),
              "controller_private","sensor_algorithm","notes")
 
-data_logs_list <- list.files(paste0(path_fusion_data,"/extract"),pattern="data_log",full.names = TRUE,recursive = TRUE)
+data_logs_list <- list.files(paste0(path_fusion_data),pattern="data_log",full.names = TRUE,recursive = TRUE)
 
 data_logs_extract <- map(data_logs_list,
-    function(f){
-      f_name <- str_extract(f,"IMT_[a-z0-9_]+");
-      f_id <- str_replace(f_name,"IMT_data_log_","");
-      folder_id <- str_extract(string = f,pattern = "extract/[0-9_]+") %>% str_replace(.,"extract/",replacement = "");
-      print(folder_id);
+    function(s){
+      s_name <- str_extract(s,"IMT_[a-z0-9_]+");
+      data_session <- str_replace(s_name,"IMT_data_log_","") %>% ymd_hm(.);
+      folder_name = str_extract(s,pattern = "/[0-9_]+/extract") %>% 
+        str_replace_all(.,"extract","") %>% 
+        str_replace_all(.,"/","");
       
-      df1 <- read_csv(f,col_names = header1,n_max = 1,skip = 1) %>% 
-        mutate(folder_id = folder_id,
-               subject_id = paste0("'",subject_id,"'"))
-      df2 <- read_csv(f,col_names = header2,skip = 3)  %>% 
-        mutate(folder_id = folder_id)
+      print(session_time);
+      
+      df1 <- if(str_detect(s,"csv")){
+        read_csv(s,col_names = header1,n_max = 1,skip = 1)
+      }else if(str_detect(s,".xlsx")){
+        readxl::read_excel(s,col_names = header1,n_max = 1,skip=1)
+      }
+
+                    
+      
+      df1 <- df1 %>% 
+        mutate(data_session = data_session,
+               folder_name = folder_name,
+               subject_id = paste0("'",subject_id,"'")) %>% 
+        mutate_at(vars(weight,insulin,dextrose),~as.numeric(.))
+      
+      df2 <- if(str_detect(s,".csv")){
+        read_csv(s,col_names = header2,skip = 3)
+      }else if(str_detect(s,".xlsx")){
+        readxl::read_excel(s,col_names = header2,skip = 3)
+      }
+      
+      
+      
+      df2 <- df2  %>% 
+        mutate(data_session = data_session,
+               folder_name = folder_name,
+               system_time = ymd_hms(system_time))
       
       list(df1,df2) %>% 
         return()
@@ -43,7 +67,7 @@ controller_information <- map_dfr(data_logs_extract,
                                })
 
 
-write_csv(patient_information,paste0(path_fusion_data,"/patient_information.csv"))
-write_csv(controller_information,paste0(path_fusion_data,"/controller_information.csv"))
+write_csv(patient_information,paste0(path_fusion_data,"/output/patient_information.csv"))
+write_csv(controller_information,paste0(path_fusion_data,"/output/controller_information.csv"))
 
 

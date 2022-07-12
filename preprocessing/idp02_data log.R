@@ -15,7 +15,7 @@ data_logs_extract <- map(data_logs_list,
         str_replace_all(.,"extract","") %>% 
         str_replace_all(.,"/","");
       
-      print(session_time);
+      # print(session_time);
       
       df1 <- if(str_detect(s,"csv")){
         read_csv(s,col_names = header1,n_max = 1,skip = 1)

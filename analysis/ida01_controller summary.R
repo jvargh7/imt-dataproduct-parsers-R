@@ -28,7 +28,7 @@ controller_summary <- map_dfr(1:nrow(unique_ids),
                               }) %>% 
   dplyr::select(subject_id,data_session,everything())
 
-write_csv(controller_summary,paste0(path_fusion_data,"/summary/controller_summary.csv"))
+
 
 ctime_summary <- map_dfr(1:nrow(unique_ids),
                          function(r) {
@@ -44,4 +44,6 @@ ctime_summary <- map_dfr(1:nrow(unique_ids),
                            
                            ) %>% 
   dplyr::select(subject_id,data_session,folder_name,controller_time,system_time,everything())
+
+write_csv(controller_summary,paste0(path_fusion_data,"/summary/controller_summary.csv"))
 write_csv(ctime_summary,paste0(path_fusion_data,"/summary/ctime_summary.csv"))

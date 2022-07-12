@@ -26,7 +26,7 @@ error_logs_extract <- map_dfr(error_logs_list,
                          })
 
 unique_ids <- error_logs_extract$error_session %>% unique(.)
-patient_information <- read_csv(paste0(path_fusion_data,"/patient_information.csv")) %>% 
+patient_information <- read_csv(paste0(path_fusion_data,"/output/patient_information.csv")) %>% 
   dplyr::select(subject_id,data_session,insulin,dextrose,weight) %>% 
   pivot_longer(cols=c("insulin","dextrose"),names_to="substance",values_to="concentration") %>% 
   mutate(substance = str_to_sentence(substance)) 

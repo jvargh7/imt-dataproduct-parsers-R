@@ -26,6 +26,7 @@ nct05386849 <- function(dexcom_glucose,fusion_glucose = NULL,arterial_glucose = 
     s2 <- mean(dexcom_glucose > 180,na.rm=TRUE)*100
     s3 <- sd(dexcom_glucose,na.rm=TRUE)/mean(dexcom_glucose,na.rm=TRUE)
     s4 <- mean(dexcom_glucose %in% c(100:140),na.rm=TRUE)*100
+    s5 <- mean(dexcom_glucose %in% c(70:140),na.rm=TRUE)*100
   }
   
   data.frame(lt70 = p1,
@@ -33,7 +34,8 @@ nct05386849 <- function(dexcom_glucose,fusion_glucose = NULL,arterial_glucose = 
              lt54 = s1,
              gt180 = s2,
              cv = s3,
-             range100to140 = s4) %>% 
+             range100to140 = s4,
+             range70to140 = s5) %>% 
   
   return()
 }

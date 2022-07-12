@@ -19,7 +19,7 @@ glucose_summary <- map_dfr(1:nrow(unique_ids),
                              mutate(sensor_id = 1);
                            
                            sensor0_out <- glucose_parsed %>% 
-                             dplyr::filter(sensor_id == 1,data_session == ds_id,subject_id == s_id) %>% 
+                             dplyr::filter(sensor_id == 0,data_session == ds_id,subject_id == s_id) %>% 
                              dplyr::select(glucose) %>% 
                              pull() %>% 
                              nct05386849(dexcom_glucose = .) %>% 

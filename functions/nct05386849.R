@@ -17,7 +17,7 @@ nct05386849 <- function(dexcom_glucose,fusion_glucose = NULL,arterial_glucose = 
   # The arterialized hand vein measurement will occur every 10-60 minutes throughout the closed loop session.
  
   missing <- sum(is.na(dexcom_glucose))
-  p1 <- p2 <- s1 <- s2 <- s3 <- s4 <- s5 <- NA
+  p1 <- p2 <- s1 <- s2 <- s3 <- s4 <- s5 <- s6 <- NA
   if(missing < 0.70*length(dexcom_glucose)){
     p1 <- mean(dexcom_glucose < 70,na.rm=TRUE)*100
     p2 <- mean(dexcom_glucose %in% c(70:180),na.rm=TRUE)*100
@@ -27,15 +27,18 @@ nct05386849 <- function(dexcom_glucose,fusion_glucose = NULL,arterial_glucose = 
     s3 <- sd(dexcom_glucose,na.rm=TRUE)/mean(dexcom_glucose,na.rm=TRUE)
     s4 <- mean(dexcom_glucose %in% c(100:140),na.rm=TRUE)*100
     s5 <- mean(dexcom_glucose %in% c(70:140),na.rm=TRUE)*100
+    s6 <- mean(dexcom_glucose, na.rm=TRUE)
   }
   
-  data.frame(lt70 = p1,
-             range70to180 = p2,
-             lt54 = s1,
-             gt180 = s2,
+  data.frame(
+             mean = s6,
              cv = s3,
+             lt54 = s1,
+             lt70 = p1,
+             range70to140 = s5,
+             range70to180 = p2,
              range100to140 = s4,
-             range70to140 = s5) %>% 
+             gt180 = s2) %>% 
   
   return()
 }

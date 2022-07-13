@@ -43,7 +43,13 @@ pump_rate_parsed <- pump_rate_parsing(error_logs_extract) %>%
   mutate(rate1 = case_when(substance == "Insulin" ~ rate*concentration,
                                  substance == "Dextrose" ~ (rate/100)*(concentration*1000)*(1/60),
                                  TRUE ~ NA_real_),
-         rate1_per_kg = rate1/weight) %>% 
+         units = case_when(substance == "Insulin" ~ "U/kg/hr",
+                                 substance == "Dextrose" ~ "mg/kg/min",
+                                 TRUE ~ NA_real_),
+         rate1_per_kg = rate1/weight,
+         units_per_kg = case_when(substance == "Insulin" ~ "U/hr",
+                                 substance == "Dextrose" ~ "mg/min",
+                                 TRUE ~ NA_real_)) %>% 
   dplyr::select(-weight,-concentration)
 
 

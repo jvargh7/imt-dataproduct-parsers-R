@@ -13,13 +13,14 @@ This is the output from analysis/ida01_controller summary.R and functions/nct053
 | ----------- | ----------- |
 | subject_id   | Subject ID from Row 2 of Data Log    |
 | data_session      | Time of session as per Data Logs |
-|  lt70  | Percentage of glucose values < 70 mg/dL  |
-|  range70to180  | Percentage of glucose values 70-180 mg/dL  |
-|  lt54  | Percentage of glucose values < 54 mg/dL  |
-|  gt180  | Percentage of glucose values > 180 mg/dL  |
+| mean  | Mean mg/dL  |
 |  cv  | SD/Mean  |
-|  range100to140  | Percentage of glucose values 100-140 mg/dL  |
+|  lt54  | Percentage of glucose values < 54 mg/dL  |
+|  lt70  | Percentage of glucose values < 70 mg/dL  |
 |  range70to140  | Percentage of glucose values 70-140 mg/dL  |
+|  range70to180  | Percentage of glucose values 70-180 mg/dL  |
+|  range100to140  | Percentage of glucose values 100-140 mg/dL  |
+|  gt180  | Percentage of glucose values > 180 mg/dL  |
 
 ## Codebook: ctime_summary.csv
 This is the list of records where controller time and system time are different by more than 3 minutes.   
@@ -32,13 +33,14 @@ This is the output from analysis/ida02_sensor summary.R, consisting of primary a
 | subject_id   | Subject ID from Row 2 of Data Log    |
 | data_session      | Time of session as per Data Logs |
 | sensor_id   | Sensor ID (0 or 1)   |
-|  lt70  | Percentage of glucose values < 70 mg/dL  |
-|  range70to180  | Percentage of glucose values 70-180 mg/dL  |
-|  lt54  | Percentage of glucose values < 54 mg/dL  |
-|  gt180  | Percentage of glucose values > 180 mg/dL  |
+| mean  | Mean mg/dL  |
 |  cv  | SD/Mean  |
-|  range100to140  | Percentage of glucose values 100-140 mg/dL  |
+|  lt54  | Percentage of glucose values < 54 mg/dL  |
+|  lt70  | Percentage of glucose values < 70 mg/dL  |
 |  range70to140  | Percentage of glucose values 70-140 mg/dL  |
+|  range70to180  | Percentage of glucose values 70-180 mg/dL  |
+|  range100to140  | Percentage of glucose values 100-140 mg/dL  |
+|  gt180  | Percentage of glucose values > 180 mg/dL  |
 
 ## Codebook: pump_rate_summary.csv
 This is the output from analysis/ida02_sensor summary.R, consisting of infusion rates.      

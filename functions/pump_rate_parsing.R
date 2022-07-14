@@ -1,4 +1,4 @@
-pump_rate_parsing <- function(df,pause_lag = 3) {
+pump_rate_parsing <- function(df,pause_lag = 3,pct_pause_cutoff = 0.5) {
   
   df_pause <- df %>% 
     dplyr::filter(log_level == "LOG_DEBUG",str_detect(error_message,"(controller pausing|controller resuming)")) %>% 
@@ -29,6 +29,19 @@ pump_rate_parsing <- function(df,pause_lag = 3) {
   bind_rows(df_pause,
             df_parsed) %>% 
     arrange(error_session,log_timestamp,substance) %>% 
+    group_by(error_session,substance) %>% 
+    mutate(last_obs = case_when(is.na(error_message) ~ NA_real_,
+                                TRUE ~ zoo::na.locf(rate)),
+           next_obs = case_when(is.na(error_message) ~ NA_real_,
+                                TRUE ~ zoo::na.locf(rate,fromLast=TRUE))) %>% 
+    mutate(rate_imp = case_when(is.na(error_message) ~ rate,
+                            last_obs == 0 & next_obs == 0 ~ rate,
+                            abs((last_obs - next_obs)*100/last_obs) > pct_pause_cutoff ~ 0,
+                            TRUE ~ rate)) %>%
+    dplyr::select(-rate) %>% 
+    dplyr::rename(
+                  rate = rate_imp) %>% 
+    
   return(.)
   
   

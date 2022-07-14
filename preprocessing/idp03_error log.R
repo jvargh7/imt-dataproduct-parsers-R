@@ -24,7 +24,7 @@ error_logs_extract <- map_dfr(error_logs_list,
                            return()
                            
                          })
-
+1
 unique_ids <- error_logs_extract$error_session %>% unique(.)
 patient_information <- read_csv(paste0(path_fusion_data,"/output/patient_information.csv")) %>% 
   dplyr::select(subject_id,data_session,insulin,dextrose,weight) %>% 
@@ -56,7 +56,11 @@ pump_paused <- pump_rate_parsed %>%
   dplyr::filter(pause == 1) %>% 
   dplyr::select(subject_id,error_session,log_timestamp,substance,error_message)
 
-
+pump_rate_parsed %>% 
+  dplyr::filter(subject_id == "'EM02'",substance == "Dextrose") %>% 
+  ggplot(data=.,aes(x=log_timestamp,y=rate1_per_kg)) + 
+  geom_path(col="red") +
+  theme_bw() + xlab("Timestamp") +ylab("Dextrose (mg/kg/min)")
 
 # SAVE ----------
 write_csv(glucose_parsed,paste0(path_fusion_data,"/output/glucose_parsed.csv"))

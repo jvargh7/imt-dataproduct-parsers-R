@@ -1,9 +1,12 @@
-pump_rate_parsing <- function(df) {
+pump_rate_parsing <- function(df,pause_lag = 3) {
   
   df_pause <- df %>% 
     dplyr::filter(log_level == "LOG_DEBUG",str_detect(error_message,"(controller pausing|controller resuming)")) %>% 
     dplyr::select(error_session,log_timestamp,error_message) %>% 
-    mutate(rate = 0,
+    mutate(rate = case_when(error_message == "controller pausing" & (log_timestamp - dplyr::lead(log_timestamp,1)) < minutes(pause_lag) ~ NA_real_,
+                            error_message == "controller resuming" & (log_timestamp - dplyr::lag(log_timestamp,1)) < minutes(pause_lag) ~ NA_real_,
+                            TRUE ~ 0
+                            ),
            pause = 1,
            substance = "Dextrose") %>% 
     bind_rows(.,

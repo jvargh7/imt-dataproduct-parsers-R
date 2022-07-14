@@ -52,10 +52,13 @@ pump_rate_parsed <- pump_rate_parsing(error_logs_extract) %>%
                                  TRUE ~ NA_character_)) %>% 
   dplyr::select(-weight,-concentration)
 
-
+pump_paused <- pump_rate_parsed %>% 
+  dplyr::filter(pause == 1) %>% 
+  dplyr::select(subject_id,error_session,log_timestamp,substance,error_message)
 
 
 
 # SAVE ----------
 write_csv(glucose_parsed,paste0(path_fusion_data,"/output/glucose_parsed.csv"))
-write_csv(pump_rate_parsed,paste0(path_fusion_data,"/output/pump_rate_parsed.csv"))
+write_csv(pump_rate_parsed %>% dplyr::select(-pause,-error_message),paste0(path_fusion_data,"/output/pump_rate_parsed.csv"))
+write_csv(pump_paused,paste0(path_fusion_data,"/output/pump_paused.csv"))

@@ -1,5 +1,17 @@
 pump_rate_parsing <- function(df) {
   
+  df_pause <- df %>% 
+    dplyr::filter(log_level == "LOG_DEBUG",str_detect(error_message,"(controller pausing|controller resuming)")) %>% 
+    dplyr::select(error_session,log_timestamp,error_message) %>% 
+    mutate(rate = 0,
+           pause = 1,
+           substance = "Dextrose") %>% 
+    bind_rows(.,
+              {.} %>% 
+                mutate(substance = "Insulin")) %>% 
+    mutate_at(vars(log_timestamp),
+              function(x) str_replace(x,"[A-Z\\sa-z]\\:","") %>% ymd_hms(.))
+  
   df_parsed <- df %>% 
     dplyr::filter(log_level == "LOG_DEBUG",str_detect(error_message,"changing pump rate to")) %>% 
     dplyr::select(error_session,log_timestamp,error_message) %>% 
@@ -11,7 +23,10 @@ pump_rate_parsing <- function(df) {
               function(x) str_replace(x,"[A-Z\\sa-z]\\:","") %>% ymd_hms(.)) %>% 
     dplyr::select(-error_message)
   
-  return(df_parsed)
+  bind_rows(df_pause,
+            df_parsed) %>% 
+    arrange(error_session,log_timestamp,substance) %>% 
+  return(.)
   
   
   

@@ -1,7 +1,7 @@
 match_logs <- function(data_log,error_log,delta = 15){
   
-  d_session <- unique(data_log$data_session)
-  e_session <- unique(error_log$error_session)
+  d_session <- unique(data_log$data_session) %>% .[order(.)]
+  e_session <- unique(error_log$error_session) %>% .[order(.)]
   
   delta_m = minutes(delta)
   

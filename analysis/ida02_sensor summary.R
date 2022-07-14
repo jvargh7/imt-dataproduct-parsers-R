@@ -37,10 +37,10 @@ glucose_summary <- map_dfr(1:nrow(unique_ids),
 
 
 pump_rate_summary <- pump_rate_parsed %>% 
-  group_by(subject_id,data_session,substance) %>% 
+  group_by(subject_id,data_session,substance,units,units_per_kg) %>% 
   summarize(average_rate1 = mean(rate1,na.rm=TRUE),
             average_rate1_per_kg = mean(rate1_per_kg,na.rm=TRUE)) %>% 
-  dplyr::select(subject_id,data_session,everything())
+  dplyr::select(subject_id,data_session,substance,average_rate1,units,average_rate1_per_kg,units_per_kg)
 
 
 write_csv(glucose_summary,paste0(path_fusion_data,"/summary/glucose_summary.csv"))

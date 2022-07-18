@@ -51,7 +51,7 @@ This is the output from analysis/ida02_sensor summary.R, consisting of infusion 
 | data_session      | Time of session as per Data Logs |
 | substance   | Substance (Dextrose or Insulin)   |
 | time_elapsed   | Sum of lag 1 time difference   |
-| units_time   | Minutes   |
+| units_time   | Units (Insulin: Hours or Dextrose: Minutes)   |
 | volume_rate1   | Sum(lag 1 difference $\times$ Rate )   |
 | units_volume   | Units (Insulin: U or Dextrose: mg)   |
 | average_rate1   | Rate (Insulin: U/hr or Dextrose: mg/min)   |

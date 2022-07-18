@@ -52,11 +52,11 @@ This is the output from analysis/ida02_sensor summary.R, consisting of infusion 
 | substance   | Substance (Dextrose or Insulin)   |
 | time_elapsed   | Sum of lag 1 time difference   |
 | units_time   | Minutes   |
-| volume_rate1   | Sum(lag 1 difference $\prod$ Rate )   |
+| volume_rate1   | Sum(lag 1 difference $\times$ Rate )   |
 | units_volume   | Units (Insulin: U or Dextrose: mg)   |
 | average_rate1   | Rate (Insulin: U/hr or Dextrose: mg/min)   |
 | units_rate1   | Units (Insulin: U/hr or Dextrose: mg/min)   |
-| volume_rate1_per_kg   | Sum(lag 1 difference $\prod$ Rate per kg )   |
+| volume_rate1_per_kg   | Sum(lag 1 difference $\times$ Rate per kg )   |
 | units_volume_per_kg   | Volume per kg (Insulin: U/kg or Dextrose: mg/kg)   |
 | average_rate1_per_kg   | Rate per kg (Insulin: U/kg.hr or Dextrose: mg/kg.min)   |
 | units_rate1_per_kg   | Units for Rate per kg (Insulin: U/kg.hr or Dextrose: mg/kg.min)   |

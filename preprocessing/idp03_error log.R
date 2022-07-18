@@ -24,7 +24,7 @@ error_logs_extract <- map_dfr(error_logs_list,
                            return()
                            
                          })
-1
+
 unique_ids <- error_logs_extract$error_session %>% unique(.)
 patient_information <- read_csv(paste0(path_fusion_data,"/output/patient_information.csv")) %>% 
   dplyr::select(subject_id,data_session,insulin,dextrose,weight) %>% 

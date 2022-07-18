@@ -43,6 +43,9 @@ pump_rate_summary <- pump_rate_parsed %>%
          rate1_per_kg_imp = case_when(is.na(rate1_per_kg) ~ 0,
                                       TRUE ~ rate1_per_kg),
          diff_timestamp = (log_timestamp - dplyr::lag(log_timestamp,1)) %>% as.numeric(.,units="mins")) %>% 
+  mutate(diff_timestamp = case_when(substance == "Insulin" ~ diff_timestamp/60,
+                                    substance == "Dextrose" ~ diff_timestamp,
+                                    TRUE ~ NA_real_)) %>% 
   
   # This would assume that the rates for the first and second observations are the same for each pair of
   # subject_id x data_session x substance (and units, units per kg)
@@ -52,7 +55,7 @@ pump_rate_summary <- pump_rate_parsed %>%
             average_rate1 = sum(diff_timestamp*rate1_imp,na.rm=TRUE)/sum(diff_timestamp,na.rm=TRUE),
             average_rate1_per_kg = sum(diff_timestamp*rate1_per_kg_imp,na.rm=TRUE)/sum(diff_timestamp,na.rm=TRUE)) %>% 
   ungroup() %>% 
-  mutate(units_time = "minutes",
+  mutate(units_time = str_extract(units,"(min|hr)"),
          units_volume = str_replace(units,"(/min|/hr)",""),
          units_volume_per_kg = str_replace(units_per_kg,"(/min|/hr)","")) %>% 
   rename(units_rate1 = units,

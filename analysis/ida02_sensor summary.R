@@ -38,9 +38,27 @@ glucose_summary <- map_dfr(1:nrow(unique_ids),
 
 pump_rate_summary <- pump_rate_parsed %>% 
   group_by(subject_id,data_session,substance,units,units_per_kg) %>% 
-  summarize(average_rate1 = mean(rate1,na.rm=TRUE),
-            average_rate1_per_kg = mean(rate1_per_kg,na.rm=TRUE)) %>% 
-  dplyr::select(subject_id,data_session,substance,average_rate1,units,average_rate1_per_kg,units_per_kg)
+  mutate(rate1_imp = case_when(is.na(rate1) ~ 0,
+                               TRUE ~ rate1),
+         rate1_per_kg_imp = case_when(is.na(rate1_per_kg) ~ 0,
+                                      TRUE ~ rate1_per_kg),
+         diff_timestamp = (log_timestamp - dplyr::lag(log_timestamp,1)) %>% as.numeric(.,units="mins")) %>% 
+  
+  # This would assume that the rates for the first and second observations are the same for each pair of
+  # subject_id x data_session x substance (and units, units per kg)
+  dplyr::summarize(time_elapsed = sum(diff_timestamp,na.rm=TRUE),
+            volume_rate1 = sum(diff_timestamp*rate1_imp,na.rm=TRUE),
+            volume_rate1_per_kg = sum(diff_timestamp*rate1_per_kg_imp,na.rm=TRUE),
+            average_rate1 = sum(diff_timestamp*rate1_imp,na.rm=TRUE)/sum(diff_timestamp,na.rm=TRUE),
+            average_rate1_per_kg = sum(diff_timestamp*rate1_per_kg_imp,na.rm=TRUE)/sum(diff_timestamp,na.rm=TRUE)) %>% 
+  ungroup() %>% 
+  mutate(units_time = "minutes",
+         units_volume = str_replace(units,"(/min|/hr)",""),
+         units_volume_per_kg = str_replace(units_per_kg,"(/min|/hr)","")) %>% 
+  rename(units_rate1 = units,
+         units_rate1_per_kg = units_per_kg) %>% 
+  dplyr::select(subject_id,data_session,substance,time_elapsed,units_time,volume_rate1,units_volume,average_rate1,units_rate1,
+                volume_rate1_per_kg,units_volume_per_kg,average_rate1_per_kg,units_rate1_per_kg)
 
 
 write_csv(glucose_summary,paste0(path_fusion_data,"/summary/glucose_summary.csv"))

@@ -44,13 +44,13 @@ ysi_tracker_extract <- map_dfr(ysi_tracker_list,
 
 sensor1 <- read_csv(paste0(path_fusion_data,"/output/sensor_strategy_parsed.csv")) %>% 
   dplyr::filter(sensor_id == 1) %>% 
-  dplyr::select(subject_id,log_timestamp,glucose) %>% 
-  rename(timestamp = log_timestamp)
+  dplyr::select(subject_id,time_stamp,glucose) %>% 
+  rename(timestamp = time_stamp)
 
 sensor0 <- read_csv(paste0(path_fusion_data,"/output/sensor_strategy_parsed.csv")) %>% 
   dplyr::filter(sensor_id == 0) %>% 
-  dplyr::select(subject_id,log_timestamp,glucose)  %>% 
-  rename(timestamp = log_timestamp)
+  dplyr::select(subject_id,time_stamp,glucose)  %>% 
+  rename(timestamp = time_stamp)
 
 # Sensor average from controller_information ------------
 sensor_average <- read_csv(paste0(path_fusion_data,"/output/controller_information.csv")) %>% 

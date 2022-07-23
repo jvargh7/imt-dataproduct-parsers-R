@@ -28,7 +28,7 @@ data_logs_extract <- map(data_logs_list,
       df1 <- df1 %>% 
         mutate(data_session = data_session,
                folder_name = folder_name,
-               subject_id = paste0("'",subject_id,"'")) %>% 
+               subject_id = paste0(subject_id)) %>% 
         mutate_at(vars(weight,insulin,dextrose),~as.numeric(.))
       
       df2 <- if(str_detect(s,".csv")){

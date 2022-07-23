@@ -3,6 +3,7 @@ header <- c("log_timestamp","log_level","unused_field","error_message","error_co
 source("functions/glucose_parsing.R")
 source("functions/match_logs.R")
 source("functions/pump_rate_parsing.R")
+source("functions/sensor_strategy_parsing.R")
 
 error_logs_list <- list.files(paste0(path_fusion_data),pattern="ERROR_LOG",full.names = TRUE,recursive = TRUE) %>% 
   .[!str_detect(.," - Copy")]
@@ -32,11 +33,13 @@ patient_information <- read_csv(paste0(path_fusion_data,"/output/patient_informa
   mutate(substance = str_to_sentence(substance)) 
   
 
-
+# GLUCOSE --------
 glucose_parsed <- glucose_parsing(error_logs_extract) %>% 
   match_logs(data_log= patient_information %>% 
                distinct(data_session,subject_id),
              error_log = .)
+
+# PUMP RATE ------------
 pump_rate_parsed <- pump_rate_parsing(error_logs_extract) %>% 
   match_logs(data_log= patient_information,
              error_log = .) %>% 
@@ -62,7 +65,16 @@ pump_rate_parsed %>%
   geom_path(col="red") +
   theme_bw() + xlab("Timestamp") +ylab("Dextrose (mg/kg/min)")
 
+# SENSOR STRATEGY -----------
+
+sensor_strategy_parsed <- sensor_strategy_parsing(error_logs_extract,strategy = "WithinFiveMinutesOfLatest") %>% 
+  match_logs(data_log= patient_information %>% 
+               distinct(data_session,subject_id),
+             error_log = .)
+
+
 # SAVE ----------
 write_csv(glucose_parsed,paste0(path_fusion_data,"/output/glucose_parsed.csv"))
 write_csv(pump_rate_parsed %>% dplyr::select(-pause,-error_message),paste0(path_fusion_data,"/output/pump_rate_parsed.csv"))
 write_csv(pump_paused,paste0(path_fusion_data,"/output/pump_paused.csv"))
+write_csv(sensor_strategy_parsed,paste0(path_fusion_data,"/output/sensor_strategy_parsed.csv"))

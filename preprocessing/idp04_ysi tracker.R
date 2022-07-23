@@ -29,17 +29,30 @@ ysi_tracker_extract <- map_dfr(ysi_tracker_list,
          blood_draw_time = ymd_hms(paste0(format(date,"%Y/%m/%d"),"_",format(time,"%H:%M:%S")))) %>% 
   dplyr::select(-date,-time)
 
+# # Sensor data from glucose_parsed ------------
+# sensor1 <- read_csv(paste0(path_fusion_data,"/output/glucose_parsed.csv")) %>% 
+#   dplyr::filter(sensor_id == 1) %>% 
+#   dplyr::select(subject_id,log_timestamp,glucose) %>% 
+#   rename(timestamp = log_timestamp)
+# 
+# sensor0 <- read_csv(paste0(path_fusion_data,"/output/glucose_parsed.csv")) %>% 
+#   dplyr::filter(sensor_id == 0) %>% 
+#   dplyr::select(subject_id,log_timestamp,glucose)  %>% 
+#   rename(timestamp = log_timestamp)
 
-sensor1 <- read_csv(paste0(path_fusion_data,"/output/glucose_parsed.csv")) %>% 
+# Sensor data from sensor_strategy_parsed ------------
+
+sensor1 <- read_csv(paste0(path_fusion_data,"/output/sensor_strategy_parsed.csv")) %>% 
   dplyr::filter(sensor_id == 1) %>% 
   dplyr::select(subject_id,log_timestamp,glucose) %>% 
   rename(timestamp = log_timestamp)
 
-sensor0 <- read_csv(paste0(path_fusion_data,"/output/glucose_parsed.csv")) %>% 
+sensor0 <- read_csv(paste0(path_fusion_data,"/output/sensor_strategy_parsed.csv")) %>% 
   dplyr::filter(sensor_id == 0) %>% 
   dplyr::select(subject_id,log_timestamp,glucose)  %>% 
   rename(timestamp = log_timestamp)
 
+# Sensor average from controller_information ------------
 sensor_average <- read_csv(paste0(path_fusion_data,"/output/controller_information.csv")) %>% 
   dplyr::select(subject_id,system_time,glucose)  %>% 
   rename(timestamp = system_time)

@@ -15,24 +15,36 @@ zone_percentages <- map_dfr(unique_subjects,
     function(u){
       
       
-      u_df <- ysi_tracker_output %>% 
-        dplyr::filter(subject_id == u)
+      u1_df <- ysi_tracker_output %>% 
+        dplyr::filter(subject_id == u) %>% 
+        dplyr::filter(!is.na(sensor1_glucose))
       
-      sensor1_zones <- getClarkeZones(referenceVals = u_df$reference_glucose, testVals = u_df$sensor1_glucose)
+      sensor1_zones <- getClarkeZones(referenceVals = u1_df$reference_glucose, testVals = u1_df$sensor1_glucose)
       
-      fig_A <- u_df %>% 
+      fig_A <- u1_df %>% 
         plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensor1_glucose,zones=sensor1_zones,
                        title = "Sensor 1",xlab="Reference Glucose (mg/dL)",ylab="Sensor Glucose (mg/dL)");
       
-      sensor0_zones <- getClarkeZones (referenceVals = u_df$reference_glucose, testVals = u_df$sensor0_glucose)
+      u0_df <- ysi_tracker_output %>% 
+        dplyr::filter(subject_id == u) %>% 
+        dplyr::filter(!is.na(sensor0_glucose))
       
-      fig_B <- u_df %>% 
+      sensor0_zones <- getClarkeZones (referenceVals = u0_df$reference_glucose, testVals = u0_df$sensor0_glucose)
+      
+      
+      
+      fig_B <- u0_df %>% 
         plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensor0_glucose,zones=sensor0_zones,
                        title = "Sensor 0",xlab="Reference Glucose (mg/dL)",ylab="Sensor Glucose (mg/dL)");
       
-      sensoravg_zones <- getClarkeZones (referenceVals = u_df$reference_glucose, testVals = u_df$sensoravg_glucose)
       
-      fig_C <- u_df %>% 
+      uavg_df <- ysi_tracker_output %>% 
+        dplyr::filter(subject_id == u) %>% 
+        dplyr::filter(!is.na(sensoravg_glucose))
+      
+      sensoravg_zones <- getClarkeZones (referenceVals = uavg_df$reference_glucose, testVals = uavg_df$sensoravg_glucose)
+      
+      fig_C <- uavg_df %>% 
         plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensoravg_glucose,zones=sensoravg_zones,
                        title = "Sensor Average",xlab="Reference Glucose (mg/dL)",ylab="Sensor Glucose (mg/dL)");
 

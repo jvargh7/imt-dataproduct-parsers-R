@@ -1,6 +1,7 @@
 
-ifelse(require(tidyverse),require(tidyverse),{install.packages("tidyverse");library(tidyverse)})
-ifelse(require(lubridate),require(lubridate),{install.packages("lubridate");library(lubridate)})
+ifelse(require(tidyverse),require(tidyverse),{install.packages("tidyverse");require(tidyverse)})
+ifelse(require(lubridate),require(lubridate),{install.packages("lubridate");require(lubridate)})
+ifelse(require(ega),require(ega),{install.packages("ega");require(ega)})
 
 
 if(Sys.info()["user"] == "JVARGH7"){

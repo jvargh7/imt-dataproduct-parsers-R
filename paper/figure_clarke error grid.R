@@ -11,35 +11,54 @@ ceg_adds <- function(p) {
 
 unique_subjects <- unique(ysi_tracker_output$subject_id)
 
-map(unique_subjects,
+zone_percentages <- map_dfr(unique_subjects,
     function(u){
       
       
+      u_df <- ysi_tracker_output %>% 
+        dplyr::filter(subject_id == u)
       
-      fig_A <- ysi_tracker_output %>% 
-        dplyr::filter(subject_id == u) %>% 
-        dplyr::select(reference_glucose,sensor1_glucose) %>% 
-        plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensor1_glucose,zones=NA,
+      sensor1_zones <- getClarkeZones(referenceVals = u_df$reference_glucose, testVals = u_df$sensor1_glucose)
+      
+      fig_A <- u_df %>% 
+        plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensor1_glucose,zones=sensor1_zones,
                        title = "Sensor 1",xlab="Reference Glucose (mg/dL)",ylab="Sensor Glucose (mg/dL)");
       
-      fig_B <- ysi_tracker_output %>% 
-        dplyr::filter(subject_id == u) %>% 
-        dplyr::select(reference_glucose,sensor0_glucose) %>% 
-        plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensor0_glucose,zones=NA,
+      sensor0_zones <- getClarkeZones (referenceVals = u_df$reference_glucose, testVals = u_df$sensor0_glucose)
+      
+      fig_B <- u_df %>% 
+        plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensor0_glucose,zones=sensor0_zones,
                        title = "Sensor 0",xlab="Reference Glucose (mg/dL)",ylab="Sensor Glucose (mg/dL)");
       
+      sensoravg_zones <- getClarkeZones (referenceVals = u_df$reference_glucose, testVals = u_df$sensoravg_glucose)
       
-      fig_C <- ysi_tracker_output %>% 
-        dplyr::filter(subject_id == u) %>% 
-        dplyr::select(reference_glucose,sensoravg_glucose) %>% 
-        plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensoravg_glucose,zones=NA,
+      fig_C <- u_df %>% 
+        plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensoravg_glucose,zones=sensoravg_zones,
                        title = "Sensor Average",xlab="Reference Glucose (mg/dL)",ylab="Sensor Glucose (mg/dL)");
 
       ggpubr::ggarrange(fig_A %>% ceg_adds(.),
                         fig_B %>% ceg_adds(.),
                         fig_C %>% ceg_adds(.),nrow=1,ncol=3,legend = "bottom") %>% 
-        ggsave(.,filename = paste0(path_fusion_data,"/figures/CEG ",u,".png"),width = 15,height=5)
+        ggsave(.,filename = paste0(path_fusion_data,"/Figures/CEG ",u,".png"),width = 15,height=5)
+      
+      z_p <- data.frame(zones = c(sensor1_zones,sensor0_zones,sensoravg_zones),
+                                     sensor = c(rep("Sensor 1",times=length(sensor1_zones)),
+                                                rep("Sensor 0",times=length(sensor0_zones)),
+                                                rep("Sensor Average",times=length(sensoravg_zones))
+                                                )) %>% 
+        group_by(sensor,zones) %>% 
+        tally() %>% 
+        mutate(percentage = n*100/sum(n)) %>% 
+        ungroup() %>% 
+        dplyr::select(-n) %>% 
+        pivot_wider(names_from=zones,values_from=percentage) %>% 
+        mutate(subject_id = u);
+      
+      return(z_p)
+      
+      
       
     })
 
+write_csv(zone_percentages,path = paste0(path_fusion_data,"/summary/CEG Zones.csv"))
 

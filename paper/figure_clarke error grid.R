@@ -22,7 +22,7 @@ zone_percentages <- map_dfr(unique_subjects,
       sensor1_zones <- getClarkeZones(referenceVals = u1_df$reference_glucose, testVals = u1_df$sensor1_glucose)
       
       fig_A <- u1_df %>% 
-        plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensor1_glucose,zones=sensor1_zones,
+        plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensor1_glucose,
                        title = "Sensor 1",xlab="Reference Glucose (mg/dL)",ylab="Sensor Glucose (mg/dL)");
       
       u0_df <- ysi_tracker_output %>% 
@@ -34,7 +34,7 @@ zone_percentages <- map_dfr(unique_subjects,
       
       
       fig_B <- u0_df %>% 
-        plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensor0_glucose,zones=sensor0_zones,
+        plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensor0_glucose,
                        title = "Sensor 0",xlab="Reference Glucose (mg/dL)",ylab="Sensor Glucose (mg/dL)");
       
       
@@ -45,7 +45,7 @@ zone_percentages <- map_dfr(unique_subjects,
       sensoravg_zones <- getClarkeZones (referenceVals = uavg_df$reference_glucose, testVals = uavg_df$sensoravg_glucose)
       
       fig_C <- uavg_df %>% 
-        plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensoravg_glucose,zones=sensoravg_zones,
+        plotClarkeGrid(referenceVals = .$reference_glucose,testVals = .$sensoravg_glucose,
                        title = "Sensor Average",xlab="Reference Glucose (mg/dL)",ylab="Sensor Glucose (mg/dL)");
 
       ggpubr::ggarrange(fig_A %>% ceg_adds(.),

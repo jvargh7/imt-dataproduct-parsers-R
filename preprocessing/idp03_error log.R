@@ -22,6 +22,7 @@ error_logs_extract <- map_dfr(error_logs_list,
                            df %>%
                              mutate(error_session = error_session,
                                     folder_name = folder_name) %>% 
+                             mutate(log_level = as.character(log_level)) %>% 
                            return()
                            
                          })

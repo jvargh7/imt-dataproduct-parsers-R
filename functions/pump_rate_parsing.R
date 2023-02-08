@@ -12,7 +12,6 @@ pump_rate_parsing <- function(df,pause_lag = 3,pct_pause_cutoff = 0.5) {
     bind_rows(.,
               {.} %>% 
                 mutate(substance = "Insulin")) %>% 
-    mutate(log_level = as.character(log_level)) %>% 
     mutate_at(vars(log_timestamp),
               function(x) str_replace(x,"[A-Z\\sa-z]\\:","") %>% ymd_hms(.))
   
@@ -25,9 +24,7 @@ pump_rate_parsing <- function(df,pause_lag = 3,pct_pause_cutoff = 0.5) {
                                  TRUE ~ NA_character_))  %>% 
     mutate_at(vars(log_timestamp),
               function(x) str_replace(x,"[A-Z\\sa-z]\\:","") %>% ymd_hms(.)) %>% 
-    dplyr::select(-error_message) %>% 
-    mutate(log_level = as.character(log_level))
-  
+    dplyr::select(-error_message)
   bind_rows(df_pause,
             df_parsed) %>% 
     arrange(error_session,log_timestamp,substance) %>% 

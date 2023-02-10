@@ -5,6 +5,9 @@
 
 # Run preprocessing files ---------
 gc();source(".Rprofile")
+
+# sink(paste0(path_fusion_data,"/imt-dataproduct-pipeline-R run_",Sys.Date(),".txt"))
+
 source("preprocessing/idp02_data log.R")
 source("preprocessing/idp03_error log.R")
 rm(list=ls())

@@ -38,6 +38,7 @@ match_logs <- function(data_log,error_log,delta = 15){
       
     
   }
+  # https://stackoverflow.com/questions/2470248/write-lines-of-text-to-a-file-in-r
   if(!identical(unmatched_sessions,integer(0))){
     unmatched_data_log <- map_dfr(unmatched_sessions,
                                   function(x){
@@ -45,11 +46,16 @@ match_logs <- function(data_log,error_log,delta = 15){
                                       dplyr::filter(data_session == d_session[x]) %>% 
                                       mutate(attempted_match = e_session[x]);
                                     return(d)
-                                    })
+                                    }) %>% 
+      unlist() %>% 
+      as.character(.)
     
     cat(paste0("Time: ",Sys.time()), file = output_file_name)
     cat("The following patients were not matched: ",file=output_file_name,sep="\n")
-    writeLines(unmatched_data_log,file = output_file_name)
+    
+    fileConn <- file(output_file_name) 
+    # writeLines(c("Hello","World"), fileConn)
+    writeLines(unmatched_data_log,con = fileConn)
     
     
   }

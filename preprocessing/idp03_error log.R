@@ -10,6 +10,7 @@ error_logs_list <- list.files(paste0(path_fusion_data),pattern="ERROR_LOG",full.
 
 error_logs_extract <- map_dfr(error_logs_list,
                          function(s){
+                           
                            s_name <- str_extract(s,"IMT_[A-Z0-9_]+");
                            error_session <- str_replace(s_name,"IMT_ERROR_LOG_","") %>% ymd_hms(.);
                            
@@ -18,6 +19,10 @@ error_logs_extract <- map_dfr(error_logs_list,
                              str_replace_all(.,"/","");
 
                            df <- read.csv(s,col.names = header,skip = 1,sep=";");
+                           if(nrow(df) == 0){
+                             df[1,] <- NA
+                           }
+                           
                            
                            df %>%
                              mutate(error_session = error_session,
@@ -35,10 +40,12 @@ patient_information <- read_csv(paste0(path_fusion_data,"/output/patient_informa
   
 
 # GLUCOSE --------
+# There is an issue here: Controller private data the same as Sensor data?
 glucose_parsed <- glucose_parsing(error_logs_extract) %>% 
-  match_logs(data_log= patient_information %>% 
+  match_logs(error_log = .,
+             data_log= patient_information %>% 
                distinct(data_session,subject_id),
-             error_log = .)
+             )
 
 # PUMP RATE ------------
 pump_rate_parsed <- pump_rate_parsing(error_logs_extract) %>% 
@@ -61,7 +68,7 @@ pump_paused <- pump_rate_parsed %>%
   dplyr::select(subject_id,error_session,log_timestamp,substance,error_message)
 
 pump_rate_parsed %>% 
-  dplyr::filter(subject_id == "'EM02'",substance == "Dextrose") %>% 
+  dplyr::filter(subject_id == "EM02",substance == "Dextrose") %>% 
   ggplot(data=.,aes(x=log_timestamp,y=rate1_per_kg)) + 
   geom_path(col="red") +
   theme_bw() + xlab("Timestamp") +ylab("Dextrose (mg/kg/min)")

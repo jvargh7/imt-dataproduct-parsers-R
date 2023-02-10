@@ -1,5 +1,6 @@
 pump_rate_parsing <- function(df,pause_lag = 3,pct_pause_cutoff = 0.5) {
   
+  # When has the controller paused and resumed -------
   df_pause <- df %>% 
     dplyr::filter(log_level == "LOG_DEBUG",str_detect(error_message,"(controller pausing|controller resuming)")) %>% 
     dplyr::select(error_session,log_timestamp,error_message) %>% 
@@ -15,6 +16,7 @@ pump_rate_parsing <- function(df,pause_lag = 3,pct_pause_cutoff = 0.5) {
     mutate_at(vars(log_timestamp),
               function(x) str_replace(x,"[A-Z\\sa-z]\\:","") %>% ymd_hms(.))
   
+  # Extracting change in pump rate --------
   df_parsed <- df %>% 
     dplyr::filter(log_level == "LOG_DEBUG",str_detect(error_message,"changing pump rate to")) %>% 
     dplyr::select(error_session,log_timestamp,error_message) %>% 
@@ -29,10 +31,17 @@ pump_rate_parsing <- function(df,pause_lag = 3,pct_pause_cutoff = 0.5) {
             df_parsed) %>% 
     arrange(error_session,log_timestamp,substance) %>% 
     group_by(error_session,substance) %>% 
-    mutate(last_obs = case_when(is.na(error_message) ~ NA_real_,
+    
+    mutate(# Bring last observation down
+           last_obs = case_when(is.na(error_message) ~ NA_real_,
                                 TRUE ~ zoo::na.locf(rate)),
+           # # Bring next observation up
            next_obs = case_when(is.na(error_message) ~ NA_real_,
-                                TRUE ~ zoo::na.locf(rate,fromLast=TRUE))) %>% 
+                                # Updated on 9-Feb-2023 because of error when NA values corresponding 
+                                # to last 'controller pausing' was preventing next_obs from being created
+                                # zoo::na.locf(rate,fromLast=TRUE) was the original version
+                                TRUE ~ zoo::na.locf(rate,fromLast=TRUE,na.rm=FALSE))
+           ) %>% 
     mutate(rate_imp = case_when(is.na(error_message) ~ rate,
                             last_obs == 0 & next_obs == 0 ~ rate,
                             abs((last_obs - next_obs)*100/last_obs) > pct_pause_cutoff ~ 0,

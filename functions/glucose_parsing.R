@@ -1,7 +1,7 @@
 glucose_parsing <- function(df) {
   df_parsed <- df %>% 
-    # PENDING
-    dplyr::filter(log_level == "LOG_INFO",str_detect(error_message,"Sensor Data")) %>% 
+    # Added LOG_DEBUG to account for incorrect field code under log_level for Sensor Data
+    dplyr::filter(log_level %in% c("LOG_INFO","LOG_DEBUG"),str_detect(error_message,"Sensor Data")) %>% 
     dplyr::select(error_session,log_timestamp,error_message) %>% 
     mutate(error_message = str_replace_all(error_message,"(Sensor Data\\:\\s|\\t|\\n|\\\\n|\\\\t|\\\\|\\{|\\}|Raw Packet\\:)","") %>% 
              str_trim(.) %>% 

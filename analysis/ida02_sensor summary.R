@@ -37,6 +37,8 @@ glucose_summary <- map_dfr(1:nrow(unique_ids),
 
 
 pump_rate_summary <- pump_rate_parsed %>% 
+  arrange(subject_id,log_timestamp)  %>% 
+  
   group_by(subject_id,data_session,substance,units,units_per_kg) %>% 
   mutate(rate1_imp = case_when(is.na(rate1) ~ 0,
                                TRUE ~ rate1),

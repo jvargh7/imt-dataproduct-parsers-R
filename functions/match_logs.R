@@ -1,4 +1,4 @@
-match_logs <- function(data_log,error_log,delta = 15){
+match_logs <- function(data_log,error_log,delta = 20){
   
   d_session <- unique(data_log$data_session) %>% .[order(.)]
   e_session <- unique(error_log$error_session) %>% .[order(.)]

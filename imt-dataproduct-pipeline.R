@@ -7,7 +7,7 @@
 gc();source(".Rprofile")
 
 # sink(paste0(path_fusion_data,"/imt-dataproduct-pipeline-R run_",Sys.Date(),".txt"))
-
+# Do not run the unzip files code (idp01_unzip files.R) --> MIGHT READD DUPLICATE LOGS
 source("preprocessing/idp02_data log.R")
 source("preprocessing/idp03_error log.R")
 rm(list=ls())

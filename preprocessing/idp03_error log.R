@@ -5,9 +5,12 @@ source("functions/match_logs.R")
 source("functions/pump_rate_parsing.R")
 source("functions/sensor_strategy_parsing.R")
 
+# If we find duplicates in [subject_id]\IMT Data Export\[folder name]\extract\Error Logs 
+
 error_logs_list <- list.files(paste0(path_fusion_data),pattern="ERROR_LOG",full.names = TRUE,recursive = TRUE) %>% 
   .[!str_detect(.," - Copy")]
 
+# Compiled error logs ---
 error_logs_extract <- map_dfr(error_logs_list,
                          function(s){
                            
@@ -51,6 +54,7 @@ glucose_parsed <- glucose_parsing(error_logs_extract) %>%
 pump_rate_parsed <- pump_rate_parsing(error_logs_extract) %>% 
   match_logs(data_log= patient_information,
              error_log = .) %>% 
+  arrange(log_timestamp) %>% 
   mutate(rate1 = case_when(substance == "Insulin" ~ rate*concentration,
                                  substance == "Dextrose" ~ (rate/100)*(concentration*1000)*(1/60),
                                  TRUE ~ NA_real_),
@@ -68,7 +72,7 @@ pump_paused <- pump_rate_parsed %>%
   dplyr::select(subject_id,error_session,log_timestamp,substance,error_message)
 
 pump_rate_parsed %>% 
-  dplyr::filter(subject_id == "EM02",substance == "Dextrose") %>% 
+  dplyr::filter(subject_id == "EM08",substance == "Dextrose") %>% 
   ggplot(data=.,aes(x=log_timestamp,y=rate1_per_kg)) + 
   geom_path(col="red") +
   theme_bw() + xlab("Timestamp") +ylab("Dextrose (mg/kg/min)")

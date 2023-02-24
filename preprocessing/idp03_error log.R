@@ -6,12 +6,16 @@ source("functions/pump_rate_parsing.R")
 source("functions/sensor_strategy_parsing.R")
 
 # If we find duplicates in [subject_id]\IMT Data Export\[folder name]\extract\Error Logs 
+# error_logs_list <- list.files(paste0(path_fusion_data),pattern="ERROR_LOG",full.names = TRUE,recursive = TRUE) %>% 
+#   .[!str_detect(.," - Copy")]
 
-error_logs_list <- list.files(paste0(path_fusion_data),pattern="ERROR_LOG",full.names = TRUE,recursive = TRUE) %>% 
-  .[!str_detect(.," - Copy")]
+source("preprocessing/idp_final list of files.R")
+
+
+
 
 # Compiled error logs ---
-error_logs_extract <- map_dfr(error_logs_list,
+error_logs_extract <- map_dfr(final_error_logs_list,
                          function(s){
                            
                            s_name <- str_extract(s,"IMT_[A-Z0-9_]+");

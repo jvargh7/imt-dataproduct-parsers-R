@@ -5,9 +5,13 @@ header2 <- c("controller_time","system_time","glucose",
                     rep(c(25,50,75),times=4),"th"),
              "controller_private","sensor_algorithm","notes")
 
-data_logs_list <- list.files(paste0(path_fusion_data),pattern="data_log",full.names = TRUE,recursive = TRUE)
+# data_logs_list <- list.files(paste0(path_fusion_data),pattern="data_log",full.names = TRUE,recursive = TRUE)
 
-data_logs_extract <- map(data_logs_list,
+source("preprocessing/idp_final list of files.R")
+
+
+
+data_logs_extract <- map(final_data_logs_list,
     function(s){
       s_name <- str_extract(s,"IMT_[a-z0-9_]+");
       data_session <- str_replace(s_name,"IMT_data_log_","") %>% ymd_hm(.);

@@ -14,3 +14,4 @@ map(file_list,
       
       unzip(f,exdir = paste0(paste0(f_path,"/extract")))
     })
+

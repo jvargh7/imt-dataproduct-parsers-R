@@ -29,22 +29,38 @@ nct05386849 <- function(dexcom_glucose,fusion_glucose = NULL,arterial_glucose = 
     s5 <- mean(dexcom_glucose %in% c(70:140),na.rm=TRUE)*100
     s6 <- mean(dexcom_glucose, na.rm=TRUE)
     s7 <- mean(dexcom_glucose > 250,na.rm=TRUE)*100
+    s8 <- mean(dexcom_glucose %in% c(54:69),na.rm=TRUE)*100
+    s9 <- mean(dexcom_glucose %in% c(181:250),na.rm=TRUE)*100
     # Non missing
     n_nonna <- sum(!is.na(dexcom_glucose)) 
     n_total = length(dexcom_glucose)
     sum_of_squares <- var(dexcom_glucose,na.rm=TRUE)*(n_nonna-1)
+    
+    
+    s10 <- round((46.7 + mean(dexcom_glucose, na.rm=TRUE))/28.7, digits = 1)
+    s11 <- round(3.31 + (0.02392*mean(dexcom_glucose,na.rm=TRUE)))
+    
   }
   
+  # Order based on: Battelino 2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6973648/
   data.frame(
              mean = s6,
+             gmi = s11,
              cv = s3,
-             lt54 = s1,
-             lt70 = p1,
-             range70to140 = s5,
-             range70to180 = p2,
-             range100to140 = s4,
-             gt180 = s2,
+             
              gt250 = s7,
+             range181to250 = s9,
+             range70to180 = p2,
+             range54to69 = s8,
+             lt54 = s1,
+             
+             range70to140 = s5,
+             range100to140 = s4,
+             lt70 = p1,
+             gt180 = s2,
+             
+             # estimated a1c was used till 2017
+             estimated_a1c = s10,
              n_nonna = n_nonna,
              n_total = n_total,
              sum_of_squares = sum_of_squares) %>% 

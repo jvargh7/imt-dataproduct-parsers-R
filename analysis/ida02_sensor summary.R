@@ -53,9 +53,11 @@ pump_rate_summary <- pump_rate_parsed %>%
   # subject_id x data_session x substance (and units, units per kg)
   dplyr::summarize(time_elapsed = sum(diff_timestamp,na.rm=TRUE),
             volume_rate1 = sum(diff_timestamp*rate1_imp,na.rm=TRUE),
+            
             volume_rate1_per_kg = sum(diff_timestamp*rate1_per_kg_imp,na.rm=TRUE),
             average_rate1 = sum(diff_timestamp*rate1_imp,na.rm=TRUE)/sum(diff_timestamp,na.rm=TRUE),
-            average_rate1_per_kg = sum(diff_timestamp*rate1_per_kg_imp,na.rm=TRUE)/sum(diff_timestamp,na.rm=TRUE)) %>% 
+            average_rate1_per_kg = sum(diff_timestamp*rate1_per_kg_imp,na.rm=TRUE)/sum(diff_timestamp,na.rm=TRUE),
+            n_nonna = sum(!is.na(diff_timestamp*rate1_imp))) %>% 
   ungroup() %>% 
   mutate(units_time = str_extract(units,"(min|hr)"),
          units_volume = str_replace(units,"(/min|/hr)",""),
@@ -63,7 +65,7 @@ pump_rate_summary <- pump_rate_parsed %>%
   rename(units_rate1 = units,
          units_rate1_per_kg = units_per_kg) %>% 
   dplyr::select(subject_id,data_session,substance,time_elapsed,units_time,volume_rate1,units_volume,average_rate1,units_rate1,
-                volume_rate1_per_kg,units_volume_per_kg,average_rate1_per_kg,units_rate1_per_kg)
+                volume_rate1_per_kg,units_volume_per_kg,average_rate1_per_kg,units_rate1_per_kg,n_nonna)
 
 
 write_csv(glucose_summary,paste0(path_fusion_data,"/summary/glucose_summary.csv"))

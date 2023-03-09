@@ -40,6 +40,10 @@ nct05386849 <- function(dexcom_glucose,fusion_glucose = NULL,arterial_glucose = 
     s10 <- round((46.7 + mean(dexcom_glucose, na.rm=TRUE))/28.7, digits = 1)
     s11 <- round(3.31 + (0.02392*mean(dexcom_glucose,na.rm=TRUE)))
     
+    median = median(dexcom_glucose,na.rm=TRUE)
+    q1 = quantile(dexcom_glucose,probs=0.25,na.rm=TRUE)
+    q3 = quantile(dexcom_glucose,probs=0.75,na.rm=TRUE)
+
   }
   
   # Order based on: Battelino 2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6973648/
@@ -63,7 +67,11 @@ nct05386849 <- function(dexcom_glucose,fusion_glucose = NULL,arterial_glucose = 
              estimated_a1c = s10,
              n_nonna = n_nonna,
              n_total = n_total,
-             sum_of_squares = sum_of_squares) %>% 
+             sum_of_squares = sum_of_squares,
+             
+             median = median,
+             iqr = paste0("IQR: ",q1," - ",q3)
+             ) %>% 
   
   return()
 }

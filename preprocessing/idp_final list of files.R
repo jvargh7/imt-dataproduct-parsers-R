@@ -1,8 +1,8 @@
 
 data_logs_list <- list.files(paste0(path_fusion_data),pattern="data_log",full.names = TRUE,recursive = TRUE)
 error_logs_list <- list.files(paste0(path_fusion_data),pattern="ERROR_LOG",full.names = TRUE,recursive = TRUE) %>% 
-  .[!str_detect(.," - Copy")]
-
+  .[!str_detect(.," - Copy")] %>% 
+  .[!str_detect(.,"(IMT_ERROR_LOG_20230418133549|IMT_ERROR_LOG_20230316145630|IMT_ERROR_LOG_20230316145935)\\.log")]
 
 folder_names_times_data_logs <- str_extract(data_logs_list,"Export/[0-9]{4}_[0-9]{2}.*/extract") %>% 
   str_replace_all("(Export|/extract)","") %>% 

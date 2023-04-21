@@ -71,6 +71,10 @@ pump_rate_parsed <- pump_rate_parsing(error_logs_extract) %>%
                                  TRUE ~ NA_character_)) %>% 
   dplyr::select(-weight,-concentration)
 
+unmatched_pump_rate_parsed <- pump_rate_parsing(error_logs_extract) %>% 
+  anti_join(pump_rate_parsed,
+            by="log_timestamp")
+
 pump_paused <- pump_rate_parsed %>% 
   dplyr::filter(pause == 1) %>% 
   dplyr::select(subject_id,error_session,log_timestamp,substance,error_message)
@@ -94,3 +98,4 @@ write_csv(glucose_parsed,paste0(path_fusion_data,"/output/glucose_parsed.csv"))
 write_csv(pump_rate_parsed %>% dplyr::select(-pause,-error_message),paste0(path_fusion_data,"/output/pump_rate_parsed.csv"))
 write_csv(pump_paused,paste0(path_fusion_data,"/output/pump_paused.csv"))
 write_csv(sensor_strategy_parsed,paste0(path_fusion_data,"/output/sensor_strategy_parsed.csv"))
+

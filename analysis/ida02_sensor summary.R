@@ -1,4 +1,6 @@
 source("functions/nct05386849.R")
+
+# Both pump_rate_parsed and glucose_parsed come from idp03_error log.R -----
 glucose_parsed <- read_csv(paste0(path_fusion_data,"/output/glucose_parsed.csv"))
 pump_rate_parsed <- read_csv(paste0(path_fusion_data,"/output/pump_rate_parsed.csv"))
 

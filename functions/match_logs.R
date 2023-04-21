@@ -1,4 +1,6 @@
-match_logs <- function(data_log,error_log,delta = 20){
+# Update: delta from 20 mins to 240 mins to incorporate EM24's difference between pump_rate_parsed and patient_information
+
+match_logs <- function(data_log,error_log,delta = 240){
   
   d_session <- unique(data_log$data_session) %>% .[order(.)]
   e_session <- unique(error_log$error_session) %>% .[order(.)]
